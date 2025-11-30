@@ -1,0 +1,91 @@
+<main class="min-h-screen w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 p-4 sm:p-6 lg:p-8">
+  <div class="max-w-7xl mx-auto">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
+        Paradero <span class="text-indigo-500">Inteligente</span>
+      </h1>
+      <p class="mt-2 text-lg text-slate-600 dark:text-slate-400">
+        Dashboard de Densidad en Tiempo Real
+      </p>
+    </header>
+
+    @if (state().loading && state().data.length === 0) {
+      <div class="flex justify-center items-center h-96">
+        <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-500"></div>
+      </div>
+    } @else if (state().error) {
+      <div class="bg-red-100 dark:bg-red-900/20 border border-red-400 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg" role="alert">
+        <strong class="font-bold">Error:</strong>
+        <span class="block sm:inline">{{ state().error }}</span>
+      </div>
+    } @else if (latestMeasurement(); as latest) {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Main Info Column -->
+        <div class="lg:col-span-1 space-y-6">
+          <div class="bg-white dark:bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+             <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-semibold text-slate-700 dark:text-slate-200">Estado Actual</h2>
+              <div class="flex items-center gap-2">
+                <div class="relative flex h-3 w-3">
+                  <span [class]="'animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ' + (statusColorClass() | slice:5)"></span>
+                  <span [class]="'relative inline-flex rounded-full h-3 w-3 ' + (statusColorClass() | slice:5)"></span>
+                </div>
+                <span [class]="'font-medium ' + statusColorClass()">{{ latest.status | titlecase }}</span>
+              </div>
+            </div>
+            <app-status-card [data]="latest" />
+          </div>
+
+          @if (latest.location) {
+             <div class="bg-white dark:bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
+               <h2 class="text-xl font-semibold mb-4 text-slate-700 dark:text-slate-200">Ubicación del Paradero</h2>
+               
+               <!-- Location Dashboard -->
+               <div class="grid grid-cols-2 gap-4 mb-6">
+                 <!-- Tiempo Estimado -->
+                 <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg text-center">
+                   <p class="text-xs text-slate-500 dark:text-slate-400">Tiempo Estimado</p>
+                   <p class="text-xl font-bold text-indigo-500 dark:text-indigo-400">{{ latest.estimatedTime }}</p>
+                 </div>
+                 
+                 <!-- Cantidad de Personas -->
+                 <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg text-center">
+                   <p class="text-xs text-slate-500 dark:text-slate-400">Nº Personas</p>
+                   <p class="text-xl font-bold text-slate-700 dark:text-slate-300">{{ latest.personCount }}</p>
+                 </div>
+                 
+                 <!-- Estado de Ocupación -->
+                 <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg text-center">
+                   <p class="text-xs text-slate-500 dark:text-slate-400">Ocupación</p>
+                   <p [class]="'text-xl font-bold ' + statusColorClass()">{{ latest.status | titlecase }}</p>
+                 </div>
+                 
+                 <!-- Recomendación -->
+                 <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg text-center flex flex-col justify-center">
+                   <p class="text-xs text-slate-500 dark:text-slate-400">Recomendación</p>
+                   <p class="text-base font-semibold text-slate-700 dark:text-slate-300 truncate" [title]="latest.recommendation || ''">{{ latest.recommendation || 'N/A' }}</p>
+                 </div>
+               </div>
+               
+               <app-map-display [location]="latest.location" />
+             </div>
+          }
+        </div>
+
+        <!-- Chart Column -->
+        <div class="lg:col-span-2 bg-white dark:bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 min-h-[400px]">
+          <h2 class="text-xl font-semibold mb-4 text-slate-700 dark:text-slate-200">Historial de Ocupación</h2>
+          <div class="h-[450px]">
+            <app-history-chart [data]="historicalData()" />
+          </div>
+        </div>
+
+      </div>
+    } @else {
+      <div class="text-center py-16">
+        <p class="text-xl text-slate-500">No hay datos disponibles para mostrar.</p>
+      </div>
+    }
+  </div>
+</main>

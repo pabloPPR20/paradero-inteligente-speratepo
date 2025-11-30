@@ -1,0 +1,5 @@
+{
+  "name": "Real-Time Bus Stop Density Dashboard",
+  "description": "A modern, interactive dashboard that displays real-time data about bus stop occupancy, including person count, status, and sensor data, with historical graphs and location mapping.",
+  "requestFramePermissions": []
+}

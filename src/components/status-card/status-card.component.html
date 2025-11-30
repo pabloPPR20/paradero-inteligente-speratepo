@@ -1,0 +1,37 @@
+
+@if (data(); as measurement) {
+  <div class="space-y-6">
+    <!-- Person Count -->
+    <div class="text-center">
+      <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Personas Detectadas</p>
+      <p class="text-6xl font-bold text-indigo-500 dark:text-indigo-400 transition-all duration-300">{{ measurement.personCount }}</p>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="text-center bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl">
+      <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Recomendación del Sistema</p>
+      <p class="text-lg font-semibold text-slate-800 dark:text-slate-200">{{ measurement.recommendation || 'No disponible' }}</p>
+    </div>
+
+    <!-- Sensor Distances -->
+    <div>
+        <h3 class="text-center text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Distancia Sensores (cm)</h3>
+        <div class="grid grid-cols-2 gap-4 text-center">
+            <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg">
+                <p class="text-xs text-slate-500 dark:text-slate-400">Sensor 1</p>
+                <p class="text-2xl font-semibold text-slate-700 dark:text-slate-300">{{ measurement.distances.sensor1 }}</p>
+            </div>
+             <div class="bg-slate-100 dark:bg-slate-700/50 p-3 rounded-lg">
+                <p class="text-xs text-slate-500 dark:text-slate-400">Sensor 2</p>
+                <p class="text-2xl font-semibold text-slate-700 dark:text-slate-300">{{ measurement.distances.sensor2 }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Timestamp -->
+    <div class="text-center border-t border-slate-200 dark:border-slate-700 pt-4">
+      <p class="text-xs text-slate-400 dark:text-slate-500">Última actualización</p>
+      <p class="text-sm font-medium text-slate-600 dark:text-slate-400">{{ measurement.timestamp | date:'medium' }}</p>
+    </div>
+  </div>
+}
